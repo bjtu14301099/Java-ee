@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public class StringSever {  
     
+	//记录当前多线程中有几个客户端同时连接
     public static ArrayList<Socket> socketList = new ArrayList<Socket>();  
     public static void main(String[] args){ 
     	ServerSocket ss = null;  
@@ -19,8 +20,8 @@ public class StringSever {
             System.out.println("等待连接...");
             while(true){                   
                 s = ss.accept();  
-                // 每收到一个socket连接 ，则启动一条SeverThread线程  
-                System.out.println("socket"+s+"连接成功"); 
+                // 每收到一个socket连接 ，则启动一条线程  
+                System.out.println(s+"连接成功"); 
                 socketList.add(s); 
                 System.out.println("当前客户端数：" + socketList.size());
                 new Thread(new MyThread(s,socketList.size())).start();  
@@ -88,6 +89,7 @@ class MyThread implements Runnable{
 	               br.close();  
 	               pw.close();  
 	               s.close(); 
+	               //客户端队列移除s
 	               StringSever.socketList.remove(s);
 	             } catch (IOException e) {  
 	                    // TODO Auto-generated catch block  
